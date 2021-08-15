@@ -33,5 +33,8 @@ module.exports = {
     'react-native/split-platform-components': 'error',
     'react-native/no-color-literals': 'error',
     'react-native/no-single-element-style-arrays': 'error',
+    'react-native/no-raw-text': ['error', {
+      skip: ['RegularText', 'SemiBoldText', 'BoldText'],
+    }],
   },
 };
