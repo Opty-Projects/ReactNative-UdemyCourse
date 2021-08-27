@@ -29,6 +29,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "Demo of the 3rd application I created in Udemy's React Native Course.",
+    "githubUrl": "https://github.com/Opty-Projects/ReactNative-UdemyCourse"
   }
 }

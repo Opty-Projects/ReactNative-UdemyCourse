@@ -1,3 +1,4 @@
 # CourseGoalsNotebook
 
-- [Demo](https://drive.google.com/file/d/1qy0UTdUjQMg4OsaGiuUcyScFbotZ9BvH/view?usp=sharing)
+- [Demo](https://youtu.be/WdtGK3O2gJ8)
+- Try it out: [(Here)](https://exp.host/@opty/CourseGoalsNotebook)

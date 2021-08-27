@@ -1,3 +1,4 @@
 # MyMeals
 
-- [Demo](https://drive.google.com/file/d/1Sb4UwE3RzN8KDZPlG5U0WvT83aPhFY0T/view?usp=sharing)
+- [Demo](https://youtu.be/PQYm9sTpf_Y)
+- Try it out: [(Here)](https://exp.host/@opty/MyMeals)

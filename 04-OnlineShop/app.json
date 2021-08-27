@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "GuessNumber",
-    "slug": "GuessNumber",
+    "name": "OnlineShop",
+    "slug": "OnlineShop",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,14 +23,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/favicon.png"
     },
-    "description": "Demo of the 2nd application I created in Udemy's React Native Course.",
+    "description": "Demo of the 4th application I created in Udemy's React Native Course.",
     "githubUrl": "https://github.com/Opty-Projects/ReactNative-UdemyCourse"
   }
 }
