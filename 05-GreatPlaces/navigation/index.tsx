@@ -49,7 +49,7 @@ function RootNavigator() {
       <RootStack.Screen
         name="NewPlaces"
         component={NewPlacesScreen}
-        options={{ title: 'New Places' }}
+        options={{ title: 'Add Place' }}
       />
     </RootStack.Navigator>
   );

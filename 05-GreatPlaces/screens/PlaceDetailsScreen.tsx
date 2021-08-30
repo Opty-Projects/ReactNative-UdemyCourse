@@ -4,11 +4,14 @@ import {
   StyleSheet, ScrollView, Image, TouchableOpacity,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { openURL } from 'expo-linking';
 
 import Colors from '../constants/Colors';
 import { RootStackScreenProps } from '../navigation/types';
 import { View } from '../components/UI/Themed';
 import { RegularText, SemiBoldText } from '../components/UI/StyledText';
+import CustomButton from '../components/UI/CustomButton';
 import MapPreview from '../components/MapPreview';
 import useColorScheme from '../hooks/useColorScheme';
 import useAppSelector from '../hooks/useAppSelector';
@@ -26,6 +29,9 @@ export default function PlaceDetailsScreen({ navigation, route }: RootStackScree
     initialLocation: place,
     readonly: true,
   }), [navigation, place]);
+  const onGetDirections = useCallback(() => openURL(
+    `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`,
+  ), [place]);
   useLayoutEffect(() => navigation.setOptions({ title: place.title }), [navigation]);
 
   return (
@@ -41,7 +47,15 @@ export default function PlaceDetailsScreen({ navigation, route }: RootStackScree
           <SemiBoldText style={[styles.title, { borderColor: Colors[colorScheme].secondary }]}>
             {place.title}
           </SemiBoldText>
-          <RegularText style={styles.address}>{place.address}</RegularText>
+          <View style={styles.locationContainer}>
+            <RegularText style={styles.address}>{place.address}</RegularText>
+            <CustomButton onPress={onGetDirections}>
+              <FontAwesome5 name="directions" size={24} color={Colors[colorScheme].accent} />
+              <RegularText style={{ color: Colors[colorScheme].background }}>
+                Directions
+              </RegularText>
+            </CustomButton>
+          </View>
         </View>
         <TouchableOpacity onPress={onGoToMap}>
           <MapPreview location={place} />
@@ -77,10 +91,16 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: 1,
   },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
   address: {
+    flex: 1,
+    marginRight: 10,
     fontSize: 16,
     textAlign: 'center',
     color: '#666',
-    marginTop: 10,
   },
 });

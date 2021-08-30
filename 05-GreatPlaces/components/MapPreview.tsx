@@ -4,7 +4,7 @@ import {
   StyleSheet, View, Image, ActivityIndicator,
 } from 'react-native';
 
-import { GOOGLE_API_KEY } from '@env';
+import { GOOGLE_API_KEY } from '../extra';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 

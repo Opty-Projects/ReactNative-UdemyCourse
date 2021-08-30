@@ -1,7 +1,8 @@
-import React, { ComponentType } from 'react';
+import React, { ComponentType, useState } from 'react';
 import {
   GestureResponderEvent,
   StyleSheet,
+  Animated,
   View,
   Image,
   TouchableNativeFeedback,
@@ -12,6 +13,8 @@ import {
   ViewStyle,
   Platform,
 } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
 import Place from '../models/Place';
@@ -22,12 +25,14 @@ import useColorScheme from '../hooks/useColorScheme';
 interface PlaceTileProps {
   place: Place
   onPress: (event: GestureResponderEvent) => void
+  onRemove: () => void
   containerStyle: StyleProp<ViewStyle>
 }
 
 export default function PlaceTile({
-  onPress,
   place,
+  onPress,
+  onRemove,
   containerStyle,
 }: PlaceTileProps) {
   const colorScheme = useColorScheme();
@@ -35,20 +40,49 @@ export default function PlaceTile({
     ? TouchableNativeFeedback
     : TouchableOpacity;
 
+  const [iconSize, setIconSize] = useState<number>(50);
+  const renderRightActions = (
+    progressAnimatedValue: Animated.AnimatedInterpolation,
+    dragAnimatedValue: Animated.AnimatedInterpolation,
+  ) => {
+    const scale = dragAnimatedValue.interpolate({
+      inputRange: [-400, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+    return (
+      <View
+        onLayout={({ nativeEvent }) => setIconSize(nativeEvent.layout.height)}
+        style={[containerStyle, styles.rightActionsContainer, {
+          backgroundColor: Colors[colorScheme].error,
+        }]}
+      >
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <Ionicons name="trash" size={iconSize} color={Colors[colorScheme].accent} />
+        </Animated.View>
+      </View>
+    );
+  };
+
   return (
-    <View style={containerStyle}>
-      <TouchableComponent onPress={onPress}>
-        <Card style={styles.innerContainer}>
-          <View style={[styles.thumbnailContainer, { borderColor: Colors[colorScheme].primary }]}>
-            <Image source={{ uri: place.thumbnailUri }} style={styles.thumbnail} />
-          </View>
-          <View style={styles.infoContainer}>
-            <SemiBoldText style={styles.title}>{place.title}</SemiBoldText>
-            <RegularText style={styles.address}>{place.address}</RegularText>
-          </View>
-        </Card>
-      </TouchableComponent>
-    </View>
+    <Swipeable
+      onSwipeableRightWillOpen={onRemove}
+      renderRightActions={renderRightActions}
+    >
+      <View style={containerStyle}>
+        <TouchableComponent onPress={onPress}>
+          <Card style={styles.innerContainer}>
+            <View style={[styles.thumbnailContainer, { borderColor: Colors[colorScheme].primary }]}>
+              <Image source={{ uri: place.thumbnailUri }} style={styles.thumbnail} />
+            </View>
+            <View style={styles.infoContainer}>
+              <SemiBoldText style={styles.title}>{place.title}</SemiBoldText>
+              <RegularText style={styles.address}>{place.address}</RegularText>
+            </View>
+          </Card>
+        </TouchableComponent>
+      </View>
+    </Swipeable>
   );
 }
 
@@ -82,5 +116,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: '#666',
+  },
+  rightActionsContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    padding: 10,
   },
 });

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useCallback, useEffect, useLayoutEffect } from 'react';
+import { Alert } from 'react-native';
 import { Item } from 'react-navigation-header-buttons';
 
 import Colors from '../constants/Colors';
@@ -13,7 +14,7 @@ import PlaceTile from '../components/PlaceTile';
 import useColorScheme from '../hooks/useColorScheme';
 import useAppDispatch from '../hooks/useAppDispatch';
 import useAppSelector from '../hooks/useAppSelector';
-import { loadPlaces } from '../store/slices/places';
+import { loadPlaces, removePlace } from '../store/slices/places';
 
 export default function PlacesOverviewScreen({ navigation }: RootStackScreenProps<'PlacesOverview'>) {
   const colorScheme = useColorScheme();
@@ -40,6 +41,21 @@ export default function PlacesOverviewScreen({ navigation }: RootStackScreenProp
     ),
   }), [navigation, colorScheme, onGoToNewPlaces]);
 
+  const onRemove = useCallback((place: Place) => Alert.alert(
+    'Delete place!',
+    `Are you sure you want to delete the place "${place.title}"?`, [{
+      text: 'Delete',
+      onPress: async () => {
+        await dispatch(removePlace({ placeId: place.id }));
+      },
+      style: 'destructive',
+    }, {
+      text: 'Cancel',
+      style: 'cancel',
+    }], {
+      cancelable: true,
+    },
+  ), [dispatch]);
   const renderTile = ({
     dataInfo,
     marginHorizontal,
@@ -47,8 +63,9 @@ export default function PlacesOverviewScreen({ navigation }: RootStackScreenProp
     width,
   }: RenderTileProps<Place>) => (
     <PlaceTile
-      onPress={() => onGoToPlaceDetails(dataInfo.item.id)}
       place={dataInfo.item}
+      onPress={() => onGoToPlaceDetails(dataInfo.item.id)}
+      onRemove={() => onRemove(dataInfo.item)}
       containerStyle={{
         marginHorizontal,
         marginVertical,
