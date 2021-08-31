@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { requestPermissionsAsync, getExpoPushTokenAsync } from 'expo-notifications';
 import { map } from 'lodash';
 import axios from 'axios';
 
@@ -10,6 +11,7 @@ import Product from '../../models/Product';
 import {
   onPending, onFulfilled, onUpdate, onError,
 } from '../../utils/ThunkActions';
+import alert from '../../utils/alert';
 
 export interface AddProductPayload {
   description: string
@@ -35,6 +37,17 @@ const initialState: State = {
   availableProducts: [],
   userProducts: [],
   isLoading: false,
+};
+
+let pushToken: string;
+const registerForPushNotificationsAsync = async () => {
+  const { granted } = await requestPermissionsAsync();
+  if (granted) {
+    const { data } = await getExpoPushTokenAsync();
+    pushToken = data;
+  } else {
+    alert('Insufficient permissions!', 'You must give permissions to be able to receive notifications.');
+  }
 };
 
 export const fetchProducts = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
@@ -64,9 +77,11 @@ export const addProduct = createAsyncThunk<void, AddProductPayload, ThunkApiConf
       idToken,
       localId,
     } = getState().authentication;
+    if (!pushToken) await registerForPushNotificationsAsync();
     const response = await axios.post(
       `https://${FIREBASE_PROJECT_ID}-default-rtdb.firebaseio.com/products.json?auth=${idToken}`, {
         ownerId: localId,
+        ownerPushToken: pushToken,
         ...payload,
       },
     );

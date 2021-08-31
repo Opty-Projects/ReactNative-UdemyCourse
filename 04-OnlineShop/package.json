@@ -44,7 +44,8 @@
     "react-native-web": "~0.13.12",
     "react-navigation-header-buttons": "^7.0.2",
     "react-redux": "^7.2.4",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "expo-notifications": "~0.12.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

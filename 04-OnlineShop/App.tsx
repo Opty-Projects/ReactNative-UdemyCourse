@@ -4,11 +4,20 @@ import { LogBox } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
+import { setNotificationHandler } from 'expo-notifications';
 
 import Navigation from './navigation';
 import store from './store';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
+
+setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 export default function App() {

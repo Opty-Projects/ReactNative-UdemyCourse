@@ -35,7 +35,7 @@ const cartSlice = createSlice({
       const { product } = action.payload;
       state.cartProducts[product.id] = {
         quantity: (state.cartProducts[product.id]?.quantity || 0) + 1,
-        ...pick(product, ['price', 'title']),
+        ...pick(product, ['ownerPushToken', 'price', 'title']),
       };
       state.price += product.price;
       alert('Successfully added to cart!', 'It will now appear in your cart.');

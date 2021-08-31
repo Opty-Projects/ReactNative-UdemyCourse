@@ -28,6 +28,42 @@ const initialState: State = {
   isLoading: false,
 };
 
+const notify = (cartProducts: Record<string, CartProduct>) => {
+  const notifications: Record<string, string> = {};
+  Object.values(cartProducts)
+    .forEach(({
+      ownerPushToken,
+      quantity,
+      title,
+    }) => {
+      if (ownerPushToken) {
+        if (!notifications[ownerPushToken]) notifications[ownerPushToken] = 'Ordered now:\n';
+        notifications[ownerPushToken] += `- ${quantity} units of your product "${title}";`;
+      }
+    });
+  Object.entries(notifications)
+    .forEach(([
+      pushToken,
+      body,
+    ]) => {
+      axios.post('https://exp.host/--/api/v2/push/send', {
+        to: pushToken,
+        title: 'Your products have been ordered!',
+        body,
+      }, {
+        headers: {
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+      })
+      // eslint-disable-next-line no-console
+        .then((value) => console.log(value))
+      // eslint-disable-next-line no-console
+        .catch((reason) => console.error(reason));
+    });
+};
+
 export const fetchOrders = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
   'orders/fetchProducts',
   async (_, { getState }) => {
@@ -59,6 +95,7 @@ export const addOrder = createAsyncThunk<void, AddOrderPayload, ThunkApiConfig>(
       },
     );
     if (response.status !== 200) throw new Error('Status code not okay!');
+    notify(payload.cartProducts);
   },
 );
 
